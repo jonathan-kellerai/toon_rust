@@ -13,7 +13,9 @@
 
 </div>
 
-Spec-first Rust port of TOON with deterministic output, strict validation, and token-efficiency options.
+Spec-first Rust port of [TOON](https://github.com/toon-format/toon) with deterministic output, strict validation, and token-efficiency options.
+
+> **Credit:** This is a Rust port of the original [TOON TypeScript implementation](https://github.com/toon-format/toon) by the [toon-format](https://github.com/toon-format) team. The format specification is maintained at [toon-format/spec](https://github.com/toon-format/spec).
 
 <div align="center">
 <h3>Quick Install</h3>

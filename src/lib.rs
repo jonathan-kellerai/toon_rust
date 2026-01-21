@@ -8,7 +8,7 @@ pub mod options;
 pub mod shared;
 
 pub use decode::{decode, decode_from_lines, decode_stream, decode_stream_sync};
-pub use encode::{encode, encode_lines};
+pub use encode::{encode, encode_lines, encode_stream_events};
 pub use options::{
     DecodeOptions, DecodeStreamOptions, EncodeOptions, EncodeReplacer, ResolvedDecodeOptions,
     ResolvedEncodeOptions,
