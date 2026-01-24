@@ -1,6 +1,6 @@
 # Conformance Harness (Skeleton)
 
-This directory documents the planned conformance harness for `toon-tr`.
+This directory documents the planned conformance harness for `tru`.
 
 Goals:
 

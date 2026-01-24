@@ -1,7 +1,7 @@
-# toon-tr - TOON Rust
+# tru - TOON Rust
 
 <div align="center">
-  <img src="toon_illustration.webp" alt="toon-tr - TOON Rust: Spec-first Rust port of the TOON reference implementation">
+  <img src="toon_illustration.webp" alt="tru - TOON Rust: Spec-first Rust port of the TOON reference implementation">
 </div>
 
 <div align="center">
@@ -47,9 +47,9 @@ cargo install --git https://github.com/Dicklesworthstone/toon_rust
 The official TOON implementation is TypeScript/JavaScript. If you want a small, fast, native binary that runs without Node and supports streaming and strict validation, you need a Rust port that matches the spec exactly.
 
 ### The Solution
-`toon-tr` is a spec-first Rust implementation with streaming decode, deterministic output, and TOON-specific optimizations (delimiters, key folding, path expansion).
+`tru` is a spec-first Rust implementation with streaming decode, deterministic output, and TOON-specific optimizations (delimiters, key folding, path expansion).
 
-### Why Use `toon-tr`?
+### Why Use `tru`?
 
 | Feature | Why it matters |
 | --- | --- |
@@ -127,7 +127,7 @@ The savings compound with data size. A 100KB JSON API response might compress to
 
 ```bash
 # Encode JSON to TOON
-echo '{"users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]}' | toon-tr --encode
+echo '{"users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]}' | tru --encode
 
 # Output:
 # users[2]{id,name}:
@@ -137,17 +137,17 @@ echo '{"users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]}' | toon-tr --enc
 # Decode TOON back to JSON
 echo 'users[2]{id,name}:
   1,Alice
-  2,Bob' | toon-tr --decode
+  2,Bob' | tru --decode
 
 # Output:
 # {"users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]}
 
 # File-based with auto-detection
-toon-tr data.json -o data.toon    # .json -> encode
-toon-tr data.toon -o data.json    # .toon -> decode
+tru data.json -o data.toon    # .json -> encode
+tru data.toon -o data.json    # .toon -> decode
 
 # Show token savings
-toon-tr data.json --stats
+tru data.json --stats
 # Token estimates: ~1250 (JSON) -> ~520 (TOON)
 # Saved ~730 tokens (-58.4%)
 ```
@@ -184,11 +184,11 @@ fn main() {
 
 ## Performance
 
-`toon-tr` is designed for speed. The Rust implementation significantly outperforms the Node.js reference.
+`tru` is designed for speed. The Rust implementation significantly outperforms the Node.js reference.
 
 ### Encode Benchmarks (hyperfine, 10 runs)
 
-| Input Size | Node.js (toon) | Rust (toon-tr) | Speedup |
+| Input Size | Node.js (toon) | Rust (tru) | Speedup |
 |------------|----------------|------------|---------|
 | 336 B | 82 ms | 3 ms | **27x faster** |
 | 144 KB (1.5K rows) | 92 ms | 11 ms | **8x faster** |
@@ -196,13 +196,13 @@ fn main() {
 
 ### Decode Benchmarks
 
-| Input Size | Node.js (toon) | Rust (toon-tr) | Speedup |
+| Input Size | Node.js (toon) | Rust (tru) | Speedup |
 |------------|----------------|------------|---------|
 | 379 KB TOON | 519 ms | 59 ms | **9x faster** |
 
 ### Resource Comparison
 
-| Metric | Node.js (toon) | Rust (toon-tr) | Improvement |
+| Metric | Node.js (toon) | Rust (tru) | Improvement |
 |--------|----------------|-----------|-------------|
 | Startup time | 66 ms | 1.1 ms | **60x faster** |
 | Memory (784KB encode) | 68 MB | 8 MB | **8x less** |
@@ -239,7 +239,7 @@ fn main() {
 
 | Tool | Runtime | Streaming | Spec fidelity | Notes |
 | --- | --- | --- | --- | --- |
-| `toon-tr` (this repo) | Native | Yes | Target: full parity | Rust port of reference |
+| `tru` (this repo) | Native | Yes | Target: full parity | Rust port of reference |
 | `toon` (reference, TS) | Node | Yes | Yes | Canonical behavior |
 | `jq` + custom format | Native | Partial | No | Not TOON-compatible |
 
@@ -262,7 +262,7 @@ cargo install --git https://github.com/Dicklesworthstone/toon_rust
 git clone https://github.com/Dicklesworthstone/toon_rust
 cd toon_rust
 cargo build --release
-./target/release/toon-tr --help
+./target/release/tru --help
 ```
 
 ---
@@ -275,11 +275,11 @@ cargo build --release
    ```
 2. Encode:
    ```bash
-   cat input.json | ./target/release/toon-tr --encode
+   cat input.json | ./target/release/tru --encode
    ```
 3. Decode:
    ```bash
-   cat data.toon | ./target/release/toon-tr --decode
+   cat data.toon | ./target/release/tru --decode
    ```
 
 Note: CLI wiring is in progress; library APIs are production-ready for encode/decode.
@@ -291,7 +291,7 @@ Note: CLI wiring is in progress; library APIs are production-ready for encode/de
 Target CLI (matches the reference tool):
 
 ```bash
-toon-tr [options] [input]
+tru [options] [input]
 ```
 
 Auto-detection:
@@ -450,7 +450,7 @@ The streaming design allows processing arbitrarily large TOON files with constan
 
 ```
            +--------------------+
-           |    CLI (toon-tr)   |
+           |    CLI (tru)   |
            |  args + IO + stats |
            +---------+----------+
                      |

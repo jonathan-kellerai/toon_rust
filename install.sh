@@ -2,11 +2,11 @@
 set -euo pipefail
 
 REPO="Dicklesworthstone/toon_rust"
-BIN_NAME="toon-tr"
+BIN_NAME="tru"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 
-log() { echo "[toon-tr] $*" >&2; }
-fail() { echo "[toon-tr] $*" >&2; exit 1; }
+log() { echo "[tru] $*" >&2; }
+fail() { echo "[tru] $*" >&2; exit 1; }
 
 download() {
   local url="$1"
@@ -39,7 +39,7 @@ case "$arch" in
 esac
 
 if [[ "$platform" == "windows" ]]; then
-  asset="${BIN_NAME}-windows-${arch}.exe.zip"
+  asset="${BIN_NAME}-windows-${arch}.zip"
   bin_file="${BIN_NAME}.exe"
 else
   asset="${BIN_NAME}-${platform}-${arch}.tar.xz"
@@ -49,7 +49,7 @@ fi
 url="https://github.com/${REPO}/releases/latest/download/${asset}"
 
 mkdir -p "$INSTALL_DIR"
-tmpdir="$(mktemp -d 2>/dev/null || mktemp -d -t toon-tr)"
+tmpdir="$(mktemp -d 2>/dev/null || mktemp -d -t tru)"
 
 cleanup() {
   rm -rf "$tmpdir"

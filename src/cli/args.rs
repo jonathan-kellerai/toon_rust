@@ -3,18 +3,18 @@ use std::path::PathBuf;
 
 /// TOON CLI — Convert between JSON and TOON formats
 #[derive(Parser, Debug)]
-#[command(name = "tr", version, about, long_about = None)]
+#[command(name = "tru", version, about, long_about = None)]
 #[allow(clippy::struct_excessive_bools)]
 #[command(after_help = "EXAMPLES:
-    toon-tr input.json                  # Encode JSON to TOON (stdout)
-    toon-tr input.toon                  # Decode TOON to JSON (stdout)
-    toon-tr input.json -o output.toon   # Encode to file
-    cat data.json | toon-tr --encode    # Encode from stdin
-    cat data.toon | toon-tr --decode    # Decode from stdin
-    toon-tr input.json --stats          # Show token statistics
+    tru input.json                  # Encode JSON to TOON (stdout)
+    tru input.toon                  # Decode TOON to JSON (stdout)
+    tru input.json -o output.toon   # Encode to file
+    cat data.json | tru --encode    # Encode from stdin
+    cat data.toon | tru --decode    # Decode from stdin
+    tru input.json --stats          # Show token statistics
 
 NOTE:
-    This tool is commonly installed as `toon-tr` to avoid conflicting with the system `tr`.")]
+    This tool is commonly installed as `tru` to avoid conflicting with the system `tr`.")]
 pub struct Args {
     /// Input file path (omit or use "-" to read from stdin)
     #[arg(value_name = "INPUT")]
