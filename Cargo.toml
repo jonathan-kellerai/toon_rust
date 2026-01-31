@@ -47,7 +47,8 @@ tracing-subscriber = { version = "0.3.22", features = ["env-filter", "fmt", "jso
 # Time
 chrono = { version = "0.4", features = ["serde"] }
 
-# Add domain-specific crates as needed
+# Async streaming (optional)
+asupersync = { path = "../asupersync", optional = true }
 
 [build-dependencies]
 vergen-gix = { version = "9.1.0", features = ["build", "cargo", "rustc"] }
@@ -75,6 +76,8 @@ opt-level = 1
 [features]
 default = []
 conformance = []
+# Enable true async streaming using asupersync runtime
+async-stream = ["dep:asupersync"]
 
 [lints.rust]
 unsafe_code = "forbid"
