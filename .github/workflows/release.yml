@@ -58,6 +58,7 @@ jobs:
           echo "Building release for tag: $TAG (version: $VERSION)"
 
   # Build cross-platform binaries
+  # Asset naming: tru-{platform}-{arch}.tar.xz (matches install.sh, homebrew, scoop)
   build:
     needs: plan
     strategy:
@@ -66,14 +67,22 @@ jobs:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+            asset_name: tru-linux-amd64
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
+            asset_name: tru-linux-musl-amd64
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            asset_name: tru-linux-arm64
           - os: macos-13
             target: x86_64-apple-darwin
+            asset_name: tru-darwin-amd64
           - os: macos-latest
             target: aarch64-apple-darwin
+            asset_name: tru-darwin-arm64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+            asset_name: tru-windows-amd64
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     steps:
@@ -94,21 +103,21 @@ jobs:
         run: |
           mkdir -p dist
           cd target/${{ matrix.target }}/release
-          tar -czf ../../../dist/toon_rust-${{ needs.plan.outputs.tag }}-${{ matrix.target }}.tar.gz tru
+          tar -cJf ../../../dist/${{ matrix.asset_name }}.tar.xz tru
           cd ../../../dist
           if command -v sha256sum &>/dev/null; then
-            sha256sum toon_rust-${{ needs.plan.outputs.tag }}-${{ matrix.target }}.tar.gz > toon_rust-${{ needs.plan.outputs.tag }}-${{ matrix.target }}.tar.gz.sha256
+            sha256sum ${{ matrix.asset_name }}.tar.xz > ${{ matrix.asset_name }}.tar.xz.sha256
           else
-            shasum -a 256 toon_rust-${{ needs.plan.outputs.tag }}-${{ matrix.target }}.tar.gz > toon_rust-${{ needs.plan.outputs.tag }}-${{ matrix.target }}.tar.gz.sha256
+            shasum -a 256 ${{ matrix.asset_name }}.tar.xz > ${{ matrix.asset_name }}.tar.xz.sha256
           fi
       - name: Package (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist
-          Compress-Archive -Path target/${{ matrix.target }}/release/tru.exe -DestinationPath dist/toon_rust-${{ needs.plan.outputs.tag }}-${{ matrix.target }}.zip
-          $hash = (Get-FileHash dist/toon_rust-${{ needs.plan.outputs.tag }}-${{ matrix.target }}.zip -Algorithm SHA256).Hash.ToLower()
-          "$hash  toon_rust-${{ needs.plan.outputs.tag }}-${{ matrix.target }}.zip" | Out-File -FilePath dist/toon_rust-${{ needs.plan.outputs.tag }}-${{ matrix.target }}.zip.sha256 -Encoding ascii -NoNewline
+          Compress-Archive -Path target/${{ matrix.target }}/release/tru.exe -DestinationPath dist/${{ matrix.asset_name }}.zip
+          $hash = (Get-FileHash dist/${{ matrix.asset_name }}.zip -Algorithm SHA256).Hash.ToLower()
+          "$hash  ${{ matrix.asset_name }}.zip" | Out-File -FilePath dist/${{ matrix.asset_name }}.zip.sha256 -Encoding ascii -NoNewline
       - uses: actions/upload-artifact@v4
         with:
           name: dist-${{ matrix.target }}
@@ -186,7 +195,7 @@ jobs:
           prerelease: ${{ contains(needs.plan.outputs.tag, '-') }}
           generate_release_notes: true
           files: |
-            artifacts/*.tar.gz
+            artifacts/*.tar.xz
             artifacts/*.zip
             artifacts/*.sha256
             artifacts/checksums.txt
