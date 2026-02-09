@@ -1,4 +1,4 @@
-//! CLI integration tests for the `tru` binary.
+//! CLI integration tests for the `toon` binary.
 //!
 //! These tests exercise the actual binary using `assert_cmd` to ensure
 //! end-to-end functionality works correctly.
@@ -8,9 +8,9 @@ use predicates::prelude::*;
 use std::fs;
 use tempfile::TempDir;
 
-/// Get a Command for the `tru` binary
-fn tru() -> Command {
-    Command::new(env!("CARGO_BIN_EXE_tru"))
+/// Get a Command for the `toon` binary
+fn toon() -> Command {
+    Command::new(env!("CARGO_BIN_EXE_toon"))
 }
 
 // ============================================================================
@@ -19,7 +19,7 @@ fn tru() -> Command {
 
 #[test]
 fn encode_simple_json_to_stdout() {
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(r#"{"name":"Alice","age":30}"#)
         .assert()
@@ -34,7 +34,7 @@ fn encode_from_json_file() {
     let input_path = tmp.path().join("input.json");
     fs::write(&input_path, r#"{"key":"value"}"#).unwrap();
 
-    tru()
+    toon()
         .arg(&input_path)
         .assert()
         .success()
@@ -48,7 +48,7 @@ fn encode_to_output_file() {
     let output_path = tmp.path().join("output.toon");
     fs::write(&input_path, r#"{"hello":"world"}"#).unwrap();
 
-    tru()
+    toon()
         .arg(&input_path)
         .arg("-o")
         .arg(&output_path)
@@ -64,7 +64,7 @@ fn encode_to_output_file() {
 fn encode_nested_object() {
     let json = r#"{"user":{"name":"Bob","email":"bob@example.com"}}"#;
 
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(json)
         .assert()
@@ -78,7 +78,7 @@ fn encode_nested_object() {
 fn encode_array_inline() {
     let json = r#"{"items":["a","b","c"]}"#;
 
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(json)
         .assert()
@@ -90,7 +90,7 @@ fn encode_array_inline() {
 fn encode_with_custom_indent() {
     let json = r#"{"outer":{"inner":"value"}}"#;
 
-    tru()
+    toon()
         .arg("--encode")
         .arg("--indent")
         .arg("4")
@@ -104,7 +104,7 @@ fn encode_with_custom_indent() {
 fn encode_with_pipe_delimiter() {
     let json = r#"{"items":["x","y","z"]}"#;
 
-    tru()
+    toon()
         .arg("--encode")
         .arg("--delimiter")
         .arg("|")
@@ -119,7 +119,7 @@ fn encode_with_pipe_delimiter() {
 fn encode_with_key_folding_safe() {
     let json = r#"{"data":{"meta":{"items":["x","y"]}}}"#;
 
-    tru()
+    toon()
         .arg("--encode")
         .arg("--key-folding")
         .arg("safe")
@@ -133,7 +133,7 @@ fn encode_with_key_folding_safe() {
 fn encode_with_stats_flag() {
     let json = r#"{"name":"Alice","description":"This is a longer description text"}"#;
 
-    tru()
+    toon()
         .arg("--encode")
         .arg("--stats")
         .write_stdin(json)
@@ -144,7 +144,7 @@ fn encode_with_stats_flag() {
 
 #[test]
 fn encode_rejects_invalid_json() {
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(r#"{"invalid": }"#)
         .assert()
@@ -158,11 +158,11 @@ fn encode_rejects_invalid_json() {
 
 #[test]
 fn decode_simple_toon_to_stdout() {
-    let toon = "name: Alice\nage: 30";
+    let toon_input = "name: Alice\nage: 30";
 
-    tru()
+    toon()
         .arg("--decode")
-        .write_stdin(toon)
+        .write_stdin(toon_input)
         .assert()
         .success()
         .stdout(predicate::str::contains(r#""name": "Alice""#))
@@ -175,7 +175,7 @@ fn decode_from_toon_file() {
     let input_path = tmp.path().join("input.toon");
     fs::write(&input_path, "key: value").unwrap();
 
-    tru()
+    toon()
         .arg(&input_path)
         .assert()
         .success()
@@ -189,7 +189,7 @@ fn decode_to_output_file() {
     let output_path = tmp.path().join("output.json");
     fs::write(&input_path, "hello: world").unwrap();
 
-    tru()
+    toon()
         .arg(&input_path)
         .arg("-o")
         .arg(&output_path)
@@ -203,11 +203,11 @@ fn decode_to_output_file() {
 
 #[test]
 fn decode_nested_object() {
-    let toon = "user:\n  name: Bob\n  email: bob@example.com";
+    let toon_input = "user:\n  name: Bob\n  email: bob@example.com";
 
-    tru()
+    toon()
         .arg("--decode")
-        .write_stdin(toon)
+        .write_stdin(toon_input)
         .assert()
         .success()
         .stdout(predicate::str::contains(r#""user""#))
@@ -216,11 +216,11 @@ fn decode_nested_object() {
 
 #[test]
 fn decode_array() {
-    let toon = "items[3]: a,b,c";
+    let toon_input = "items[3]: a,b,c";
 
-    tru()
+    toon()
         .arg("--decode")
-        .write_stdin(toon)
+        .write_stdin(toon_input)
         .assert()
         .success()
         .stdout(predicate::str::contains(r#""items""#))
@@ -238,13 +238,13 @@ fn decode_array() {
 
 #[test]
 fn decode_with_expand_paths_safe() {
-    let toon = "a.b.c: 42";
+    let toon_input = "a.b.c: 42";
 
-    tru()
+    toon()
         .arg("--decode")
         .arg("--expand-paths")
         .arg("safe")
-        .write_stdin(toon)
+        .write_stdin(toon_input)
         .assert()
         .success()
         .stdout(predicate::str::contains(r#""a""#))
@@ -255,16 +255,16 @@ fn decode_with_expand_paths_safe() {
 #[test]
 fn decode_with_no_strict_allows_invalid_indentation() {
     // Non-multiple of indent size (3 spaces with default indent 2)
-    let toon = "outer:\n   inner: value";
+    let toon_input = "outer:\n   inner: value";
 
     // With strict mode (default), this should fail
-    tru().arg("--decode").write_stdin(toon).assert().failure();
+    toon().arg("--decode").write_stdin(toon_input).assert().failure();
 
     // With no-strict, it should succeed
-    tru()
+    toon()
         .arg("--decode")
         .arg("--no-strict")
-        .write_stdin(toon)
+        .write_stdin(toon_input)
         .assert()
         .success();
 }
@@ -280,7 +280,7 @@ fn auto_detect_encode_from_json_extension() {
     fs::write(&input_path, r#"{"auto":"detect"}"#).unwrap();
 
     // Should auto-detect encode mode from .json extension
-    tru()
+    toon()
         .arg(&input_path)
         .assert()
         .success()
@@ -294,7 +294,7 @@ fn auto_detect_decode_from_toon_extension() {
     fs::write(&input_path, "auto: detect").unwrap();
 
     // Should auto-detect decode mode from .toon extension
-    tru()
+    toon()
         .arg(&input_path)
         .assert()
         .success()
@@ -308,7 +308,7 @@ fn explicit_mode_overrides_extension() {
     let input_path = tmp.path().join("data.toon");
     fs::write(&input_path, r#"{"force":"encode"}"#).unwrap();
 
-    tru()
+    toon()
         .arg("--encode")
         .arg(&input_path)
         .assert()
@@ -325,7 +325,7 @@ fn roundtrip_simple_object() {
     let original_json = r#"{"name":"Alice","age":30,"active":true}"#;
 
     // Encode JSON -> TOON
-    let encode_output = tru()
+    let encode_output = toon()
         .arg("--encode")
         .write_stdin(original_json)
         .assert()
@@ -334,12 +334,12 @@ fn roundtrip_simple_object() {
         .stdout
         .clone();
 
-    let toon = String::from_utf8(encode_output).unwrap();
+    let toon_str = String::from_utf8(encode_output).unwrap();
 
     // Decode TOON -> JSON
-    let decode_output = tru()
+    let decode_output = toon()
         .arg("--decode")
-        .write_stdin(toon.trim())
+        .write_stdin(toon_str.trim())
         .assert()
         .success()
         .get_output()
@@ -390,7 +390,7 @@ fn roundtrip_nested_structure() {
     let original_json = r#"{"user":{"profile":{"name":"Bob","settings":{"theme":"dark"}}}}"#;
 
     // Encode
-    let encode_output = tru()
+    let encode_output = toon()
         .arg("--encode")
         .write_stdin(original_json)
         .assert()
@@ -399,12 +399,12 @@ fn roundtrip_nested_structure() {
         .stdout
         .clone();
 
-    let toon = String::from_utf8(encode_output).unwrap();
+    let toon_str = String::from_utf8(encode_output).unwrap();
 
     // Decode
-    let decode_output = tru()
+    let decode_output = toon()
         .arg("--decode")
-        .write_stdin(toon.trim())
+        .write_stdin(toon_str.trim())
         .assert()
         .success()
         .get_output()
@@ -424,7 +424,7 @@ fn roundtrip_with_array() {
     let original_json = r#"{"items":["apple","banana","cherry"]}"#;
 
     // Encode
-    let encode_output = tru()
+    let encode_output = toon()
         .arg("--encode")
         .write_stdin(original_json)
         .assert()
@@ -433,12 +433,12 @@ fn roundtrip_with_array() {
         .stdout
         .clone();
 
-    let toon = String::from_utf8(encode_output).unwrap();
+    let toon_str = String::from_utf8(encode_output).unwrap();
 
     // Decode
-    let decode_output = tru()
+    let decode_output = toon()
         .arg("--decode")
-        .write_stdin(toon.trim())
+        .write_stdin(toon_str.trim())
         .assert()
         .success()
         .get_output()
@@ -459,7 +459,7 @@ fn roundtrip_with_array() {
 
 #[test]
 fn error_on_missing_input_file() {
-    tru()
+    toon()
         .arg("/nonexistent/path/file.json")
         .assert()
         .failure()
@@ -468,7 +468,7 @@ fn error_on_missing_input_file() {
 
 #[test]
 fn error_on_invalid_delimiter() {
-    tru()
+    toon()
         .arg("--encode")
         .arg("--delimiter")
         .arg("invalid")
@@ -480,7 +480,7 @@ fn error_on_invalid_delimiter() {
 
 #[test]
 fn error_on_invalid_indent() {
-    tru()
+    toon()
         .arg("--encode")
         .arg("--indent")
         .arg("99")
@@ -495,12 +495,12 @@ fn error_on_invalid_indent() {
 
 #[test]
 fn handle_empty_object() {
-    tru().arg("--encode").write_stdin("{}").assert().success();
+    toon().arg("--encode").write_stdin("{}").assert().success();
 }
 
 #[test]
 fn handle_empty_array() {
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(r#"{"empty":[]}"#)
         .assert()
@@ -510,7 +510,7 @@ fn handle_empty_array() {
 
 #[test]
 fn handle_null_value() {
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(r#"{"value":null}"#)
         .assert()
@@ -520,7 +520,7 @@ fn handle_null_value() {
 
 #[test]
 fn handle_boolean_values() {
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(r#"{"yes":true,"no":false}"#)
         .assert()
@@ -531,7 +531,7 @@ fn handle_boolean_values() {
 
 #[test]
 fn handle_numeric_values() {
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(r#"{"integer":42,"float":3.14,"negative":-1}"#)
         .assert()
@@ -543,7 +543,7 @@ fn handle_numeric_values() {
 
 #[test]
 fn handle_special_characters_in_string() {
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(r#"{"text":"hello\nworld"}"#)
         .assert()
@@ -552,7 +552,7 @@ fn handle_special_characters_in_string() {
 
 #[test]
 fn handle_unicode() {
-    tru()
+    toon()
         .arg("--encode")
         .write_stdin(r#"{"greeting":"こんにちは","emoji":"🎉"}"#)
         .assert()
@@ -562,7 +562,7 @@ fn handle_unicode() {
 #[test]
 fn stdin_dash_argument() {
     // Using "-" explicitly should read from stdin
-    tru()
+    toon()
         .arg("-")
         .arg("--encode")
         .write_stdin(r#"{"stdin":"dash"}"#)
@@ -577,7 +577,7 @@ fn stdin_dash_argument() {
 
 #[test]
 fn help_flag_shows_usage() {
-    tru()
+    toon()
         .arg("--help")
         .assert()
         .success()
@@ -589,9 +589,9 @@ fn help_flag_shows_usage() {
 
 #[test]
 fn version_flag_shows_version() {
-    tru()
+    toon()
         .arg("--version")
         .assert()
         .success()
-        .stdout(predicate::str::contains("tru"));
+        .stdout(predicate::str::contains("toon"));
 }

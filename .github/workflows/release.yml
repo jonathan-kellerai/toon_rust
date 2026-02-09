@@ -58,7 +58,7 @@ jobs:
           echo "Building release for tag: $TAG (version: $VERSION)"
 
   # Build cross-platform binaries
-  # Asset naming: tru-{platform}-{arch}.tar.xz (matches install.sh, homebrew, scoop)
+  # Asset naming: toon-{platform}-{arch}.tar.xz (matches install.sh, homebrew, scoop)
   build:
     needs: plan
     strategy:
@@ -67,22 +67,22 @@ jobs:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            asset_name: tru-linux-amd64
+            asset_name: toon-linux-amd64
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
-            asset_name: tru-linux-musl-amd64
+            asset_name: toon-linux-musl-amd64
           - os: ubuntu-24.04-arm
             target: aarch64-unknown-linux-gnu
-            asset_name: tru-linux-arm64
+            asset_name: toon-linux-arm64
           - os: macos-13
             target: x86_64-apple-darwin
-            asset_name: tru-darwin-amd64
+            asset_name: toon-darwin-amd64
           - os: macos-latest
             target: aarch64-apple-darwin
-            asset_name: tru-darwin-arm64
+            asset_name: toon-darwin-arm64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            asset_name: tru-windows-amd64
+            asset_name: toon-windows-amd64
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     steps:
@@ -103,7 +103,7 @@ jobs:
         run: |
           mkdir -p dist
           cd target/${{ matrix.target }}/release
-          tar -cJf ../../../dist/${{ matrix.asset_name }}.tar.xz tru
+          tar -cJf ../../../dist/${{ matrix.asset_name }}.tar.xz toon
           cd ../../../dist
           if command -v sha256sum &>/dev/null; then
             sha256sum ${{ matrix.asset_name }}.tar.xz > ${{ matrix.asset_name }}.tar.xz.sha256
@@ -115,7 +115,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist
-          Compress-Archive -Path target/${{ matrix.target }}/release/tru.exe -DestinationPath dist/${{ matrix.asset_name }}.zip
+          Compress-Archive -Path target/${{ matrix.target }}/release/toon.exe -DestinationPath dist/${{ matrix.asset_name }}.zip
           $hash = (Get-FileHash dist/${{ matrix.asset_name }}.zip -Algorithm SHA256).Hash.ToLower()
           "$hash  ${{ matrix.asset_name }}.zip" | Out-File -FilePath dist/${{ matrix.asset_name }}.zip.sha256 -Encoding ascii -NoNewline
       - uses: actions/upload-artifact@v4

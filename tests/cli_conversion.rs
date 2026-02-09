@@ -1,11 +1,11 @@
-use tru::cli::conversion::{decode_to_json_chunks, encode_to_toon_lines};
-use tru::options::{DecodeOptions, EncodeOptions, ExpandPathsMode, KeyFoldingMode};
+use toon::cli::conversion::{decode_to_json_chunks, encode_to_toon_lines};
+use toon::options::{DecodeOptions, EncodeOptions, ExpandPathsMode, KeyFoldingMode};
 
 #[test]
 fn encode_to_toon_lines_matches_encode() {
     let input = r#"{"name":"Ada","id":1}"#;
-    let expected = tru::encode::encode(
-        tru::JsonValue::from(serde_json::from_str::<serde_json::Value>(input).unwrap()),
+    let expected = toon::encode::encode(
+        toon::JsonValue::from(serde_json::from_str::<serde_json::Value>(input).unwrap()),
         None,
     );
     let actual = encode_to_toon_lines(input, None).unwrap().join("\n");

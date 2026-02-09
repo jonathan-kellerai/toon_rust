@@ -1,6 +1,6 @@
-use tru::cli::json_stream::json_stream_from_events;
-use tru::cli::json_stringify::json_stringify_lines;
-use tru::{
+use toon::cli::json_stream::json_stream_from_events;
+use toon::cli::json_stringify::json_stringify_lines;
+use toon::{
     JsonStreamEvent, JsonValue, StringOrNumberOrBoolOrNull, decode_stream_sync, encode,
     encode_stream_events,
 };

@@ -3,8 +3,8 @@ use std::path::{Path, PathBuf};
 
 use serde::Deserialize;
 
-use tru::encode::encode;
-use tru::options::{EncodeOptions, KeyFoldingMode};
+use toon::encode::encode;
+use toon::options::{EncodeOptions, KeyFoldingMode};
 
 #[derive(Debug, Deserialize)]
 struct FixtureFile {

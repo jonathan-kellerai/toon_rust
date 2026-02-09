@@ -8,7 +8,7 @@
 //! # Example
 //!
 //! ```ignore
-//! use tru::decode::async_decode::{try_decode_stream_async, AsyncDecodeStream};
+//! use toon::decode::async_decode::{try_decode_stream_async, AsyncDecodeStream};
 //! use asupersync::stream::StreamExt;
 //!
 //! async fn decode_large_file(lines: Vec<String>) {
