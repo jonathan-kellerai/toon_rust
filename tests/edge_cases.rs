@@ -260,7 +260,9 @@ fn numeric_infinity_becomes_null() {
         ),
         (
             "neg_inf".to_string(),
-            JsonValue::Primitive(toon::StringOrNumberOrBoolOrNull::from_f64(f64::NEG_INFINITY)),
+            JsonValue::Primitive(toon::StringOrNumberOrBoolOrNull::from_f64(
+                f64::NEG_INFINITY,
+            )),
         ),
     ]);
     let toon = toon::encode::encode(value, None);

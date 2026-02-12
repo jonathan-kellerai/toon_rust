@@ -258,7 +258,11 @@ fn decode_with_no_strict_allows_invalid_indentation() {
     let toon_input = "outer:\n   inner: value";
 
     // With strict mode (default), this should fail
-    toon().arg("--decode").write_stdin(toon_input).assert().failure();
+    toon()
+        .arg("--decode")
+        .write_stdin(toon_input)
+        .assert()
+        .failure();
 
     // With no-strict, it should succeed
     toon()
