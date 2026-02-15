@@ -1,5 +1,5 @@
 [package]
-name = "toon"
+name = "tru"
 version = "0.2.0"
 edition = "2024"
 rust-version = "1.85"
@@ -8,7 +8,7 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/Dicklesworthstone/toon_rust"
 repository = "https://github.com/Dicklesworthstone/toon_rust"
-documentation = "https://docs.rs/toon"
+documentation = "https://docs.rs/tru"
 keywords = ["cli", "json", "serialization", "llm", "encoding"]
 categories = ["command-line-utilities", "encoding"]
 exclude = [
@@ -23,6 +23,10 @@ exclude = [
     "toon_illustration.webp",
     "storage.sqlite3",
 ]
+
+[lib]
+name = "toon"
+path = "src/lib.rs"
 
 [[bin]]
 name = "toon"

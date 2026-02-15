@@ -2657,34 +2657,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
-name = "toon"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "assert_cmd",
- "asupersync",
- "chrono",
- "clap",
- "clap_complete",
- "console_error_panic_hook",
- "criterion",
- "insta",
- "js-sys",
- "predicates",
- "proptest",
- "rand",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror",
- "tracing",
- "tracing-subscriber",
- "vergen-gix",
- "walkdir",
- "wasm-bindgen",
-]
-
-[[package]]
 name = "tracing"
 version = "0.1.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2756,6 +2728,34 @@ dependencies = [
  "tracing-core",
  "tracing-log",
  "tracing-serde",
+]
+
+[[package]]
+name = "tru"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "assert_cmd",
+ "asupersync",
+ "chrono",
+ "clap",
+ "clap_complete",
+ "console_error_panic_hook",
+ "criterion",
+ "insta",
+ "js-sys",
+ "predicates",
+ "proptest",
+ "rand",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror",
+ "tracing",
+ "tracing-subscriber",
+ "vergen-gix",
+ "walkdir",
+ "wasm-bindgen",
 ]
 
 [[package]]
